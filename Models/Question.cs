@@ -2,7 +2,7 @@
 
 namespace Examination_System.Models
 {
-    public class Question
+    public class Question :BaseEntity
     {
         public string? Text { get; set; }
         public QuestionDifficulty Difficulty { get; set; }

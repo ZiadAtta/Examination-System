@@ -3,5 +3,6 @@
     public class Instructor:User
     {
         public ICollection<Course>? CoursesCreated { get; set; }
+        public ICollection<Exam>? Exames { get; set; }
     }
 }

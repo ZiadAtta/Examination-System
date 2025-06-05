@@ -2,6 +2,7 @@
 {
     public class Student:User
     {
-        public ICollection<Enrollment>? Enrollments { get; set; } 
+        public ICollection<StudentCourse> StudentCourses { get; set; } = new List<StudentCourse>();
+        public ICollection<StudentExam> StudentExams { get; set; } = new List<StudentExam>();
     }
 }

@@ -8,16 +8,16 @@ namespace Examination_System.Data
     {
         public DbSet<User> Users { get; set; }
         public DbSet<Course> Courses { get; set; }
-        public DbSet<Enrollment> Enrollments { get; set; }
         public DbSet<Question> Questions { get; set; }
         public DbSet<Choice> Choices { get; set; }
         public DbSet<Exam> Exams { get; set; }
         public DbSet<ExamQuestion> ExamQuestions { get; set; }
-        public DbSet<ExamAssignment> ExamAssignments { get; set; }
-        public DbSet<ExamAttempt> ExamAttempts { get; set; }
         public DbSet<StudentAnswer> StudentAnswers { get; set; }
+        public DbSet<PreRequest> PreRequests { get; set; }
+        public DbSet<StudentCourse> StudentCourses { get; set; }
+        public DbSet<StudentExam> StudentExams { get; set; }
 
-        public Context(DbContextOptions<Context> options) : base(options)
+        public Context() 
         {
 
         }
@@ -39,9 +39,6 @@ namespace Examination_System.Data
 
             modelBuilder.Entity<ExamQuestion>()
                .HasKey(eq => new { eq.ExamId, eq.QuestionId });
-
-            modelBuilder.Entity<ExamAssignment>()
-                .HasKey(ea => new { ea.ExamId, ea.StudentId });
 
             modelBuilder.Entity<Question>()
                 .HasMany(q => q.Choices)
