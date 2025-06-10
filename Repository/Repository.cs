@@ -34,7 +34,7 @@ namespace Examination_System.Repository
                 return false;
             }
             await _dbSet.AddAsync(entity);
-            return true;
+            return true; 
         }
         public async Task<bool> UpdateAsync(Entity entity)
         {

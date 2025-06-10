@@ -1,3 +1,5 @@
+using Examination_System.Data;
+using Examination_System.Models;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Examination_System.Controllers;
@@ -6,6 +8,7 @@ namespace Examination_System.Controllers;
 [Route("[controller]")]
 public class WeatherForecastController : ControllerBase
 {
+    private readonly Context _context;
     private static readonly string[] Summaries = new[]
     {
         "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
@@ -16,6 +19,7 @@ public class WeatherForecastController : ControllerBase
     public WeatherForecastController(ILogger<WeatherForecastController> logger)
     {
         _logger = logger;
+        _context = new Context();
     }
 
     [HttpGet(Name = "GetWeatherForecast")]
@@ -29,4 +33,20 @@ public class WeatherForecastController : ControllerBase
         })
         .ToArray();
     }
+
+    [HttpPost]
+    public bool DoWhatever()
+    {
+        Instructor instructor = new Instructor
+        {
+            Username = "instructor1",
+            Email = "Any Of Any",
+            PasswordHash = "hashedpassword",
+            Role = UserRole.Instructor,
+        };
+        _context.Users.Add(instructor);
+        _context.SaveChanges();
+        return true;
+    }
+    
 }

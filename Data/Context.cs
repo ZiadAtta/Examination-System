@@ -34,7 +34,7 @@ namespace Examination_System.Data
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<Student>().ToTable("Students");
-            modelBuilder.Entity<Instructor>().ToTable("Owners");
+            modelBuilder.Entity<Instructor>().ToTable("Instructor");
 
 
             modelBuilder.Entity<ExamQuestion>()
