@@ -8,6 +8,9 @@ namespace Examination_System.Common
         public MappingProfile()
         {
             CreateMap<Course, CreateCourseVM>().ReverseMap();
+            CreateMap<Choice, CreateChoiceVM>().ReverseMap();
+            CreateMap<Question, CreateQuestionVM>().ReverseMap();
         }
     }
 }
+ 

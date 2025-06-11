@@ -83,8 +83,8 @@ namespace Examination_System.Services
             }
             try
             {
-                var course = await _repository.GetAll().Where(x => x.Id == Id).FirstOrDefaultAsync();
-                if (course != null)
+                var course = await _repository.GetAll().Where(x => x.Id == Id).AnyAsync();
+                if (course)
                 {
                     return GeneralResponse<bool>.Response(false, "The Id Is Not Valid.");
                 }
