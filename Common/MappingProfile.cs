@@ -10,7 +10,8 @@ namespace Examination_System.Common
             CreateMap<Course, CreateCourseVM>().ReverseMap();
             CreateMap<Choice, CreateChoiceVM>().ReverseMap();
             CreateMap<Question, CreateQuestionVM>().ReverseMap();
+            CreateMap<ExamQuestion, CreateExamQuestionVM>().ReverseMap();
+            CreateMap<Exam, CreateExamVM>().ReverseMap();
         }
     }
 }
- 

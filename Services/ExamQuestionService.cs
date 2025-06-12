@@ -1,54 +1,50 @@
-﻿using AutoMapper;
-using Examination_System.Common;
-using Examination_System.DTOS;
+﻿using Examination_System.Repository;
 using Examination_System.Models;
-using Examination_System.Repository;
 using Examination_System.ViewModels;
+using Examination_System.Common;
+using AutoMapper;
 using Microsoft.EntityFrameworkCore;
+using Examination_System.DTOS;
 
 namespace Examination_System.Services
 {
-    public class QuestionService
+    public class ExamQuestionService
     {
-        private readonly IMapper _mapper;   
-        private readonly IRepository<Question> _repository;
-        public QuestionService(IMapper mapper)
+        private readonly IMapper _mapper;
+        private readonly IRepository<ExamQuestion> _repository;
+        public ExamQuestionService(IMapper mapper)
         {
             _mapper = mapper;
-            _repository = new Repository<Question>();
+            _repository = new Repository<ExamQuestion>();
         }
 
-        public GeneralResponse<IEnumerable<QuestionDTO>> Display()
+        public GeneralResponse<IEnumerable<ExamQuestion>> Display()
         {
-            var listQuestions= _repository.GetAll().Select(x => new QuestionDTO
+            var listExamQuestion = _repository.GetAll().Select(x => new ExamQuestion
             {
-                Text = x.Text,
-                Difficulty = (int)x.Difficulty,
-                InstructorId = x.InstructorId,
-                Choices = x.Choices.Select(
-                    C => new ChoiceDTO(C.Text,C.IsCorrect)
-                    ).ToList()
+                ExamId = x.ExamId,
+               QuestionId = x.QuestionId,
             }).ToList();
 
-            return GeneralResponse<IEnumerable<QuestionDTO>>.Response(listQuestions, "The Data Returned Succeffully.", true);
+            return GeneralResponse<IEnumerable<ExamQuestion>>.Response(listExamQuestion, "The Data Returned Succeffully.", true);
         }
-        public async Task<GeneralResponse<bool>> Create(CreateQuestionVM questionVM)
+        public async Task<GeneralResponse<bool>> Create(CreateExamQuestionVM ExamQuestionVM)
         {
             try
             {
                 // Check For Existence 
                 bool exist = await _repository.GetAll().Where(
-                    x => x.Text == questionVM.Text &&
-                    x.InstructorId == questionVM.InstructorId
+                    x => x.ExamId == ExamQuestionVM.ExamId &&
+                    x.QuestionId == ExamQuestionVM.QuestionId
                   ).AnyAsync();
 
                 if (exist)
                 {
-                    return GeneralResponse<bool>.Response(false, "This Question Is Was Exist Before.", false, ErrorCode.Exist.ToString());
+                    return GeneralResponse<bool>.Response(false, "This ExamQuestion Is Was Exist Before.", false, ErrorCode.Exist.ToString());
                 }
 
-                var question = _mapper.Map<Question>(questionVM);
-                await _repository.AddAsync(question);
+                var ExamQuestion = _mapper.Map<ExamQuestion>(ExamQuestionVM);
+                await _repository.AddAsync(ExamQuestion);
                 await _repository.SaveChangesAsync();
                 return GeneralResponse<bool>.Response(true, "The Data Saved Correct.", true);
             }
@@ -58,16 +54,15 @@ namespace Examination_System.Services
             }
         }
 
-        public async Task<GeneralResponse<bool>> Update(UpdateQuestionDTO questionVM)
+        public async Task<GeneralResponse<bool>> Update(UpdateExamQuestionVM examQuestionVM)
         {
             try
             {
-                var question = await _repository.GetByIdAsync(questionVM.Id);
-                question.Text = questionVM.Text;
-                question.Difficulty = questionVM.Difficulty;
-                question.InstructorId = questionVM.InstructorId;
+                var examQuestion = await _repository.GetByIdAsync(examQuestionVM.Id);
+                examQuestion.ExamId = examQuestionVM.ExamId;
+                examQuestion.QuestionId = examQuestionVM.QuestionId;
 
-                await _repository.SaveIncludeAsync(question, nameof(question.Text), nameof(question.Difficulty), nameof(question.InstructorId));
+                await _repository.SaveIncludeAsync(examQuestion, nameof(examQuestion.ExamId), nameof(examQuestion.QuestionId));
                 await _repository.SaveChangesAsync();
 
                 return GeneralResponse<bool>.Response(true, "The Data Saved Correct.", true);
