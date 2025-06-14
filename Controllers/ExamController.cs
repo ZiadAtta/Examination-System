@@ -81,5 +81,46 @@ namespace Examination_System.Controllers
 
             return await _examService.Delete(examId);
         }
+
+        [HttpPost("Take")]
+        public async Task<GeneralResponse<ExamDTO>> TakeExam([FromBody] StudentExamVM request)
+        {
+            if (!ModelState.IsValid)
+            {
+                var errors = ModelState.Values
+                    .SelectMany(v => v.Errors)
+                    .Select(e => e.ErrorMessage)
+                    .ToList();
+
+                return GeneralResponse<ExamDTO>.Response(
+                    null,
+                    "Model state is invalid.",
+                    false,
+                    string.Join(" | ", errors)
+                );
+            }
+
+            return await _examService.TakeExam(request);
+        }
+
+        public async Task<GeneralResponse<ExamResultDTO>> SubmitExam([FromBody] SubmitExamVM request)
+        {
+            if (!ModelState.IsValid)
+            {
+                var errors = ModelState.Values
+                    .SelectMany(v => v.Errors)
+                    .Select(e => e.ErrorMessage)
+                    .ToList();
+
+                return GeneralResponse<ExamResultDTO>.Response(
+                    null,
+                    "Model state is invalid.",
+                    false,
+                    string.Join(" | ", errors)
+                );
+            }
+
+            return await _examService.SubmitExamAsync(request);
+        }
     }
 }

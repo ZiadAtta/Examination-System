@@ -12,5 +12,6 @@
         Conflict,
         Exist,
         InvalidInput,
+        Invalide,
     }
 }
