@@ -66,6 +66,30 @@ namespace Examination_System.Controllers
             return await _examService.Update(examVM);
         }
 
+        [HttpPost("CreateWithQuestions")]
+        public async Task<GeneralResponse<bool>> CreateWithQuestions(CreateExamWithQuestionsVM vm)
+        {
+            if (!ModelState.IsValid)
+            {
+                var errors = ModelState.Values.SelectMany(v => v.Errors).Select(e => e.ErrorMessage).ToList();
+                return GeneralResponse<bool>.Response(false, "Validation error", false, string.Join(" | ", errors));
+            }
+
+            return await _examService.CreateExamWithQuestions(vm);
+        }
+
+
+        [HttpGet("Results/{examId}")]
+        public async Task<GeneralResponse<IEnumerable<StudentExamResultDTO>>> GetAllResults(int examId)
+        {
+            if (examId <= 0)
+            {
+                return GeneralResponse<IEnumerable<StudentExamResultDTO>>.Response(null, "Invalid Exam ID", false, ErrorCode.Invalide.ToString());
+            }
+
+            return await _examService.GetAllStudentResultsForExam(examId);
+        }
+
         [HttpDelete("{examId}")]
         public async Task<GeneralResponse<bool>> Delete(int examId)
         {
@@ -81,8 +105,17 @@ namespace Examination_System.Controllers
 
             return await _examService.Delete(examId);
         }
+        [HttpPost("GetStudentResult")]
+        public async Task<GeneralResponse<ExamResultDTO>> GetStudentResult(int examId)
+        {
+            if(examId < 1)
+            {
+                return GeneralResponse<ExamResultDTO>.Response();
+            }
+            return await _examService.GetStudentResult(examId);
+        }
 
-        [HttpPost("Take")]
+       [HttpPost("Take")]
         public async Task<GeneralResponse<ExamDTO>> TakeExam([FromBody] StudentExamVM request)
         {
             if (!ModelState.IsValid)
@@ -102,7 +135,7 @@ namespace Examination_System.Controllers
 
             return await _examService.TakeExam(request);
         }
-
+        [HttpPost("Submit")]    
         public async Task<GeneralResponse<ExamResultDTO>> SubmitExam([FromBody] SubmitExamVM request)
         {
             if (!ModelState.IsValid)
