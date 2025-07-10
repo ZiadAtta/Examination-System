@@ -13,5 +13,6 @@
         Exist,
         InvalidInput,
         Invalide,
+        UserAlreadyExists,
     }
 }

@@ -1,5 +1,7 @@
-
 using Examination_System.Common;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
 
 namespace Examination_System
 {
@@ -18,6 +20,27 @@ namespace Examination_System
 
             builder.Services.AddAutoMapper(typeof(MappingProfile));
 
+            builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+                .AddJwtBearer(options =>
+                {
+                    options.TokenValidationParameters = new TokenValidationParameters
+                    {
+                        ValidateIssuer = true,
+                        ValidateAudience = true,
+                        ValidateLifetime = true,
+                        ValidateIssuerSigningKey = true,
+                        ValidIssuer = builder.Configuration["Jwt:Issuer"],
+                        ValidAudience = builder.Configuration["Jwt:Audience"],
+                        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["Jwt:SecretKey"]))
+                    };
+                });
+
+            builder.Services.AddAuthorization(options =>
+            {
+                options.AddPolicy("All", policy => policy.RequireRole("Instructor", "Student"));
+                options.AddPolicy("Student", policy => policy.RequireClaim("Role", "Student"));
+                options.AddPolicy("Instructor", policy => policy.RequireClaim("Role", "Instructor"));
+            });
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.
