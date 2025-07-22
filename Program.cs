@@ -1,4 +1,6 @@
 using Examination_System.Common;
+using Examination_System.Filters;
+using Examination_System.Localizations;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
@@ -19,6 +21,10 @@ namespace Examination_System
             builder.Services.AddSwaggerGen();
 
             builder.Services.AddAutoMapper(typeof(MappingProfile));
+
+            // Add localization services
+            builder.Services.AddLocalization(options => options.ResourcesPath = "Resources");
+            builder.Services.AddScoped<SharedResources>();
 
             builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                 .AddJwtBearer(options =>
@@ -41,7 +47,12 @@ namespace Examination_System
                 options.AddPolicy("Student", policy => policy.RequireClaim("Role", "Student"));
                 options.AddPolicy("Instructor", policy => policy.RequireClaim("Role", "Instructor"));
             });
+            builder.Services.AddScoped<GlobalErrorHandlerMidleware>();
+            builder.Services.AddScoped<TransactionMiddleware>();
             var app = builder.Build();
+
+            app.UseMiddleware<GlobalErrorHandlerMidleware>();   
+            app.UseMiddleware<TransactionMiddleware>();
 
             // Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())

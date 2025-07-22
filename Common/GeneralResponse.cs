@@ -1,4 +1,5 @@
-﻿namespace Examination_System.Common
+﻿
+namespace Examination_System.Common
 {
     public class GeneralResponse<T> 
     {

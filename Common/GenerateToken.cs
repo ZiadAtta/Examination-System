@@ -23,7 +23,7 @@ namespace Examination_System.Common
                 Audience = "",
                 Subject = new System.Security.Claims.ClaimsIdentity(new[]
                 {
-                    new System.Security.Claims.Claim("ID", userID.ToString()),
+                   new System.Security.Claims.Claim("ID", userID.ToString()),
                     new System.Security.Claims.Claim(ClaimTypes.Name, Name),
                     new System.Security.Claims.Claim(ClaimTypes.Role, Role)
                 }),

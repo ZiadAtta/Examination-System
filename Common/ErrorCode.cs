@@ -14,5 +14,6 @@
         InvalidInput,
         Invalide,
         UserAlreadyExists,
+        UnauthorizedAccess,
     }
 }
